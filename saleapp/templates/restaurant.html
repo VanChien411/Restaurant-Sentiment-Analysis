@@ -1,0 +1,140 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Trang chu {% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="../static/css/base.css"/>
+{%endblock%}
+{% block js %}
+<script src="{{ url_for('static', filename='js/base.js') }}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+{%endblock%}
+
+{% block header %}
+<style>
+    #table1 {
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 500px;
+        text-align: center;
+        vertical-align: middle;
+        padding: 10px;
+        margin: 10px auto;
+        background-color: #f2f2f2;
+        color: #333;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+    }
+
+    th, td {
+        text-align: center;
+    }
+
+    img {
+         object-fit: cover;  /* Điều chỉnh kích thước để phủ kín */
+         width: 100%;  /* Chiều rộng 100% (tùy chọn) */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="tabs-to-dropdown">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{url_for('home')}}">Bùi Tiến Phát</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+                    aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarScroll">
+                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('home')}}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{url_for('restaurant')}}">Restaurant
+                            Job</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('sentiment')}}">Sentiment Analysis</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" action="/restaurant">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Nhập tên nhà hàng bạn muốn tìm kiếm"
+                           aria-label="Từ khóa tìm kiếm" aria-describedby="basic-addon2" name="name">
+                    <div class="input-group-append">
+                        <button type = "submit" class="btn btn-outline-secondary" type="button">Tìm Kiếm</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    {% if count != 0 %}
+    <div class="row">
+        {% for i, p in products.iterrows() %}
+        <div class="col-md-3 col-sm-12" style="padding:1rem;">
+            <div class="card">
+                <img class="card-img-top" src="{{p.Image}}" alt="{{ p.Restaurant }}" height="380px">
+                <div class="card-body">
+                    <h4 class="card-title">{{ p.Restaurant }}</h4>
+                    <p class="card-text" style="font-size: 12px">{{ p.Address }}</p>
+                    {%if p.Time != 'nan'%}
+                        <p class="card-text" style="font-size: 12px"><b> Giờ mở cửa: </b>{{ p.Time }}</p>
+                    {%else%}
+                        <p class="card-text" style="font-size: 12px"><b> Giờ mở cửa: </b>{{ p.Time }}</p>
+                    {%endif%}
+                    <p class="card-text">{{ p.Price }} VNĐ</p>
+                    <a href="{{url_for('product_detail', product_id=p.ID)}}" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <h4 class="text-danger">Không có sản phầm nào!</h4>
+    {% endif %}
+
+    <ul class="pagination d-flex justify-content-center">
+        {%if pages > 1 and pages < 25%}
+        {% for i in range(1, pages + 1) %}
+            {%if i == page_now%}
+            <li class="page-item"><a class="page-link bg-light"
+                                     href="{{url_for('restaurant', page=i, kw=name)}}"><u>{{i}}</u></a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link"
+                                     href="{{url_for('restaurant', page=i, kw=name)}}">{{i}}</a></li>
+            {% endif %}
+        {% endfor %}
+        {%else%}
+            {%if page_now != 1%}
+                <li class="page-item"><a class="page-link bg-light"
+                                         href="{{url_for('restaurant', page=page_now - 1, kw=name)}}"> < </a></li>
+            {%endif%}
+            <li class="page-item"><a class="page-link bg-light"
+                                     href="{{url_for('restaurant', page=i, kw=name)}}"><u>{{page_now}}</u></a></li>
+            <li class="page-item"><a class="page-link bg-light"
+                                         href="{{url_for('restaurant', page=page_now + 1, kw=name)}}"> > </a></li>
+        {%endif%}
+    </ul>
+</div>
+{% endblock %}
+
+
