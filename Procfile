@@ -1,1 +1,1 @@
-web: python sale/index.py
+web: python saleapp/index.py
