@@ -85,4 +85,4 @@ def sentiment():
     return render_template('sentiment.html', confi=confi, label=label, post=post.replace("_", " "), pos=pos, neg=neg)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=FalseFalse,host='0.0.0.0')
