@@ -11,13 +11,13 @@ from saleapp import client, review_data, restaurant_data, data_merge
 import seaborn as sns
 
 def get_data_mau():
-    print(os.path.join(os.getcwd(), 'data/2_Reviews.csv'))
+    print(os.path.join(os.getcwd(), 'saleapp/data/2_Reviews.csv'))
     data = review_data.copy()
 
     return data.sample(5)
 
 def get_data_nha_hang_mau():
-    print(os.path.join(os.getcwd(), 'data/2_Reviews.csv'))
+    print(os.path.join(os.getcwd(), 'saleapp/data/2_Reviews.csv'))
     data = restaurant_data.copy()
 
     return data.sample(5)
